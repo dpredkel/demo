@@ -1,0 +1,45 @@
+// jib plugin
+jib {
+    from {
+        image = "adoptopenjdk:11-jre-hotspot"
+    }
+    to {
+        image = "demo_jib:latest"
+    }
+    container {
+        entrypoint = ["bash", "-c", "/entrypoint.sh"]
+        ports = ["8080"]
+        environment = [
+                SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS",
+        ]
+        creationTime = "USE_CURRENT_TIMESTAMP"
+    }
+    extraDirectories {
+        paths = file("src/main/jib")
+        permissions = ["/entrypoint.sh": "755"]
+    }
+}
+
+// palantir plugin
+docker {
+    name "${project.name}_palantir:latest"
+//    tag 'myRegistry', 'my.registry.com/username/my-app:version'
+    dependsOn bootJar
+    files bootJar, 'src/main/docker/entrypoint.sh' // "$buildDir/libs/" can be instead bootJar
+    dockerfile project.file('src/main/docker/Dockerfile')
+//    can be used to pass build arguments
+//    buildArgs([JAR_FILE: jar.baseName])
+}
+
+dockerRun {
+    name "${project.name}"
+    image "${project.name}_palantir:latest"
+    ports '8080:8080'
+//    env 'JAVA_OPTS': '-Dspring.profiles.active=prod'
+    clean true
+}
+
+// spring boot plugin
+bootBuildImage {
+    imageName = "demo_sboot:latest"
+}

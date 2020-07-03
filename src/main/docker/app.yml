@@ -1,0 +1,12 @@
+version: '2'
+services:
+  demo:
+    image: demo
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+    ports:
+      - 8080:8080
+  demo-postgresql:
+    extends:
+      file: demo.yml
+      service: demo-postgresql
