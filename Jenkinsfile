@@ -15,7 +15,7 @@ pipeline {
             }
         }
 
-        stage('Long-running Verification') {
+        stages('Long-running Verification') {
             environment {
                 SONAR_TOKEN = credentials('SONARCLOUD_TOKEN')
             }
