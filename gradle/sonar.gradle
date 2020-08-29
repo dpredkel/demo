@@ -1,0 +1,9 @@
+sonarqube {
+    properties {
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property "sonar.projectKey", "dpredkel_demo"
+        property "sonar.organization", "dpredkel-demo"
+//        property 'sonar.login', System.getenv('SONAR_LOGIN')
+//        properties['sonar.tests'] += sourceSets.integrationTest.java.srcDirs
+    }
+}

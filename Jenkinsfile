@@ -6,43 +6,67 @@ pipeline {
     }
 
     stages {
+        stage('check java') {
+            sh "java -version"
+        }
         stage('Compile') {
             steps {
                 gradlew('clean', 'classes')
             }
         }
-        stage('Unit Tests') {
-            steps {
-                gradlew('test')
+
+        stage('Long-running Verification') {
+            environment {
+                SONAR_TOKEN = credentials('SONARCLOUD_TOKEN')
             }
-            post {
-                always {
-                    junit '**/build/test-results/test/TEST-*.xml'
+            stage('Unit Tests') {
+                steps {
+                    gradlew('test')
+                }
+                post {
+                    always {
+                        junit '**/build/test-results/test/TEST-*.xml'
+                    }
+                }
+            }
+            stage('sonar') {
+                steps {
+                    gradlew('sonarqube')
                 }
             }
         }
-//         stage('Long-running Verification') {
-//             environment {
-//                 SONAR_LOGIN = credentials('SONARCLOUD_TOKEN')
-//             }
-//             parallel {
-//                 stage('Integration Tests') {
+        stage('Promotion') {
+            steps {
+                timeout(time: 1, unit:'DAYS') {
+                    input 'Deploy to ?'
+                }
+            }
+        }
+//         stage('Publish') {
 //                     steps {
-//                         gradlew('integrationTest')
-//                     }
-//                     post {
-//                         always {
-//                             junit '**/build/test-results/integrationTest/TEST-*.xml'
+//                         dir('build/docker') {
+//                             script{
+//                                 withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+//                                     sh 'docker login -u ${dockerHubUser} -p ${dockerHubPassword}'
+//                                     sh 'docker push pokl/test:latest'
+//                                 }
+//                             }
 //                         }
 //                     }
 //                 }
-//                 stage('Code Analysis') {
+//                 stage('Deploy') {
 //                     steps {
-//                         gradlew('sonarqube')
+//                         script {
+//                             withKubeConfig([credentialsId: 'service-account', serverUrl:"${KUBERNETES_URL}"]){
+//                                 try {
+//                                     sh 'kubectl delete -f k8s/'
+//                                 } catch (e) {
+//                                     echo 'Error when executing kubectl'
+//                                 }
+//                                 sh 'kubectl apply -f k8s/'
+//                             }
+//                         }
 //                     }
-//                 }
-//             }
-//         }
 //         stage('Assemble') {
 //             steps {
 //                 gradlew('assemble')
