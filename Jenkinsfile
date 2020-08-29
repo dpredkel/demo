@@ -6,9 +6,9 @@ pipeline {
     }
 
     stages {
-        stage('check java') {
-            sh "java -version"
-        }
+//         stage('check java') {
+//             sh "java -version"
+//         }
         stage('Compile') {
             steps {
                 gradlew('clean', 'classes')
