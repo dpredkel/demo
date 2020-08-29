@@ -1,6 +1,6 @@
 version: '2'
 services:
-  monolith-postgresql:
+  demo-postgresql:
     image: postgres:12.3
     # volumes:
     #     - ~/volumes/demo/postgresql/:/var/lib/postgresql/data/

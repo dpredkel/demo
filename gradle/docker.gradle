@@ -11,6 +11,7 @@ jib {
         ports = ["8080"]
         environment = [
                 SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS",
+                APPLICATION_SLEEP         : "0"
         ]
         creationTime = "USE_CURRENT_TIMESTAMP"
     }

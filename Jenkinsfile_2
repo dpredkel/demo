@@ -1,0 +1,50 @@
+pipeline {
+  agent any
+
+  options {
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(numToKeepStr:'5'))
+  }
+
+  triggers {
+    pollSCM('H/15 * * * *')
+  }
+
+  tools {
+    jdk "jdk-8u162"
+  }
+
+  environment {
+    JAVA_HOME="${jdk}"
+  }
+
+  stages {
+    stage('Cleanup before build') {
+      steps {
+        cleanWs()
+      }
+    }
+
+    stage('Checkout from Github') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build') {
+      steps {
+        script {
+          def rtGradle = Artifactory.newGradleBuild()
+          rtGradle.tool = "Gradle 4.3.0"
+          rtGradle.run buildFile: 'build.gradle', tasks: 'clean build'
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+    }
+  }
+}
