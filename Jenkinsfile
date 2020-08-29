@@ -6,32 +6,19 @@ pipeline {
     }
 
     stages {
-//         stage('check java') {
-//             sh "java -version"
-//         }
         stage('Compile') {
             steps {
                 gradlew('clean', 'classes')
             }
         }
 
-        stages('Long-running Verification') {
-            environment {
-                SONAR_TOKEN = credentials('SONARCLOUD_TOKEN')
+        stage('Unit Tests') {
+            steps {
+                gradlew('test')
             }
-            stage('Unit Tests') {
-                steps {
-                    gradlew('test')
-                }
-                post {
-                    always {
-                        junit '**/build/test-results/test/TEST-*.xml'
-                    }
-                }
-            }
-            stage('sonar') {
-                steps {
-                    gradlew('sonarqube')
+            post {
+                always {
+                    junit '**/build/test-results/test/TEST-*.xml'
                 }
             }
         }
@@ -67,27 +54,6 @@ pipeline {
 //                             }
 //                         }
 //                     }
-//         stage('Assemble') {
-//             steps {
-//                 gradlew('assemble')
-//                 stash includes: '**/build/libs/*.war', name: 'app'
-//             }
-//         }
-//         stage('Promotion') {
-//             steps {
-//                 timeout(time: 1, unit:'DAYS') {
-//                     input 'Deploy to Production?'
-//                 }
-//             }
-//         }
-//         stage('Deploy to Production') {
-//             environment {
-//                 HEROKU_API_KEY = credentials('HEROKU_API_KEY')
-//             }
-//             steps {
-//                 unstash 'app'
-//                 gradlew('deployHeroku')
-//             }
 //         }
     }
     post {
