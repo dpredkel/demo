@@ -1,0 +1,35 @@
+spotbugs {
+    spotbugsTest.enabled = false
+}
+
+pmd {
+    pmdTest.enabled = false
+}
+
+tasks.withType(Pmd) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+spotbugsMain {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+checkstyle {
+    toolVersion = "${checkstyle_version}"
+    configFile file("checkstyle.xml")
+    checkstyleTest.enabled = false
+}
+
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}

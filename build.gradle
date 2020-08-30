@@ -1,15 +1,20 @@
 plugins {
     id 'java'
-    id "org.sonarqube" version '3.0'
-    id 'org.springframework.boot' version '2.3.1.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'com.google.cloud.tools.jib' version '2.4.0'
-    id 'com.palantir.docker' version '0.25.0'
-    id 'com.palantir.docker-run' version '0.25.0'
+    id 'checkstyle'
+    id 'pmd'
+    id 'jacoco'
+    id 'com.github.spotbugs'
+//    id 'cobertura'
+    id "io.spring.nohttp"
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'com.google.cloud.tools.jib'
+    id 'com.palantir.docker'
+    id 'com.palantir.docker-run'
 }
 
 apply from: 'gradle/docker.gradle'
-apply from: 'gradle/sonar.gradle'
+apply from: 'gradle/staticCodeAnalysis.gradle'
 
 group = 'com.example'
 version = 'unspecified'

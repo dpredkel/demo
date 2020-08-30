@@ -1,0 +1,14 @@
+
+pluginManagement {
+     plugins {
+          id 'org.springframework.boot' version "${spring_boot_version}"
+          id 'com.google.cloud.tools.jib' version "${jib_plugin_version}"
+          id "io.spring.nohttp" version "${spring_no_http_plugin_version}"
+          id 'com.github.spotbugs' version "${spotbugs_version}"
+          id 'io.spring.dependency-management' version "${spring_dependency_management_pugin_version}"
+          id 'com.palantir.docker' version "${palantir_plugin_version}"
+          id 'com.palantir.docker-run' version "${palantir_plugin_version}"
+     }
+}
+
+rootProject.name = "demo"

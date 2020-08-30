@@ -6,15 +6,15 @@ pipeline {
     }
 
     stages {
-        stage('Compile') {
+        stage('Clean') {
             steps {
-                gradlew('clean', 'classes')
+                gradlew('clean')
             }
         }
 
-        stage('Unit Tests') {
+        stage('Checks and tests') {
             steps {
-                gradlew('test')
+                gradlew('check')
             }
             post {
                 always {
@@ -25,7 +25,7 @@ pipeline {
         stage('Promotion') {
             steps {
                 timeout(time: 1, unit:'DAYS') {
-                    input 'Deploy to ?'
+                    input 'Deploy to prod?'
                 }
             }
         }
