@@ -4,7 +4,11 @@ jib {
         image = "adoptopenjdk:11-jre-hotspot"
     }
     to {
-        image = "demo_jib:latest"
+        image = "dpredkel/${project.name}_jib:latest"
+        auth {
+            username = System.getenv('DOCKHUB_LOGIN')
+            password = System.getenv('DOCKHUB_PASSWORD')
+        }
     }
     container {
         entrypoint = ["bash", "-c", "/entrypoint.sh"]

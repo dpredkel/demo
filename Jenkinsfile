@@ -12,7 +12,7 @@ pipeline {
             }
         }
 
-        stage('Checks and tests') {
+        stage('Analysis and tests') {
             steps {
                 gradlew('check')
             }
@@ -25,8 +25,19 @@ pipeline {
         stage('Promotion') {
             steps {
                 timeout(time: 1, unit:'DAYS') {
-                    input 'Deploy to prod?'
+                    input 'Publish?'
                 }
+            }
+        }
+        stage('Publish docker') {
+            environment {
+                DOCKHUB_LOGIN = credentials('DOCKHUB_LOGIN')
+                DOCKHUB_PASSWORD = credentials('DOCKHUB_PASSWORD')
+            }
+            steps {
+                // A pre-requisite to this step is to setup authentication to the docker registry
+                // https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin#authentication-methods
+                gradlew('jib')
             }
         }
 //         stage('Publish') {
