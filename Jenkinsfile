@@ -40,32 +40,6 @@ pipeline {
                 gradlew('jib')
             }
         }
-//         stage('Publish') {
-//                     steps {
-//                         dir('build/docker') {
-//                             script{
-//                                 withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-//                                     sh 'docker login -u ${dockerHubUser} -p ${dockerHubPassword}'
-//                                     sh 'docker push pokl/test:latest'
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//                 stage('Deploy') {
-//                     steps {
-//                         script {
-//                             withKubeConfig([credentialsId: 'service-account', serverUrl:"${KUBERNETES_URL}"]){
-//                                 try {
-//                                     sh 'kubectl delete -f k8s/'
-//                                 } catch (e) {
-//                                     echo 'Error when executing kubectl'
-//                                 }
-//                                 sh 'kubectl apply -f k8s/'
-//                             }
-//                         }
-//                     }
-//         }
     }
     post {
         failure {
